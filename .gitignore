@@ -161,3 +161,6 @@ nbdist/
 *.orig
 *.old
 *.log
+
+# Personal Notes
+Notes/
