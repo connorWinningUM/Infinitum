@@ -19,6 +19,7 @@ protected:
 
 public:
     // Alias the mpfr rounding type enum so that it can be properly exported
+    // all values are aliased so we can assume they have the same value and can be used as such
     enum BigRounding {
         ROUND_NEAREST = MPFR_RNDN,
         ROUND_ZERO = MPFR_RNDZ,
@@ -48,23 +49,33 @@ public:
     godot::Ref<BigNumber> operator_div(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_pow(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_mod(const godot::Variant &p_other) const;
-
-    godot::Ref<BigNumber> operator_lshift() const;
-    godot::Ref<BigNumber> operator_rshift() const;
-    godot::Ref<BigNumber> operator_and() const;
-    godot::Ref<BigNumber> operator_xor() const;
     
     int compare(const godot::Ref<BigNumber> &p_other) const;
-    bool is_equal(const godot::Ref<BigNumber> &p_other) const;
-    bool operator_less_than(const godot::Ref<BigNumber> &p_other) const { return compare(p_other) < 0; }
-    bool operator_greater_than(const godot::Ref<BigNumber> &p_other) const { return compare(p_other) > 0; }
+    bool operator_is_equal(const godot::Ref<BigNumber> &p_other) const;
+    bool operator_not_is_equal(const godot::Ref<BigNumber> &p_other) const;
+    bool operator_less_than(const godot::Variant &p_other) const;
+    bool operator_less_than_equal(const godot::Variant &p_other) const;
+    bool operator_greater_than(const godot::Variant &p_other) const;
+    bool operator_greater_than_equal(const godot::Variant &p_other) const;
 
-    godot::Ref<BigNumber> operator_neg(const godot::Ref<BigNumber> &p_other) const;
-    godot::Ref<BigNumber> operator_pos(const godot::Ref<BigNumber> &p_other) const;
+    godot::Ref<BigNumber> operator_neg() const;
 
 private:
     mpfr_t big_num;
     BigRounding round_type;
+
+    // function signature shapes MPFR uses for operations (used for the execute_math_op helper)
+    typedef int (*mpfr_obj_func)(mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mpfr_rnd_t);
+    typedef int (*mpfr_si_func) (mpfr_ptr, mpfr_srcptr, long, mpfr_rnd_t);
+    typedef int (*mpfr_d_func)  (mpfr_ptr, mpfr_srcptr, double, mpfr_rnd_t);
+
+    // helper function which reduces repeated code in arithmetic operations
+    godot::Ref<BigNumber> execute_math_op(
+        const godot::Variant &p_other,
+        mpfr_obj_func op_obj,
+        mpfr_si_func op_si,
+        mpfr_d_func op_d
+    ) const;
 
 };
 
