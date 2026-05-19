@@ -95,6 +95,22 @@ int BigNumber::get_round_type() const {
     return static_cast<int>(round_type);
 }
 
+void set_valuebig(const godot::Ref<BigNumber> &p_other) {
+
+}
+
+void set_valuef(const double &p_value) {
+
+}
+
+void set_valuesi(const int &p_value){
+
+}
+
+void BigNumber::set_value(const godot::Variant &p_other) {
+    
+}
+
 int BigNumber::compare(const godot::Ref<BigNumber> &p_other) const {
     if (p_other.is_null()) {
         return 1;

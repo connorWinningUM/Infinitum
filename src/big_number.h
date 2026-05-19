@@ -38,9 +38,13 @@ public:
     void set_round_type(const int &value);
     int get_round_type() const;
 
-    void set_value(const BigNumber &big);
-    float get_dec() const;
-    std::string get_scientific() const;
+    void set_value(const godot::Variant &p_other);
+    void set_valuebig(const godot::Ref<BigNumber> &p_other);
+    void set_valuef(const double &p_value);
+    void set_valuesi(const int &p_value);
+
+    float to_float() const;
+    std::string to_scientific() const;
 
     // ============= Operator Overloads ============= //
     godot::Ref<BigNumber> operator_sub(const godot::Variant &p_other) const;
