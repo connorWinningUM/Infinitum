@@ -264,3 +264,23 @@ copy = env.Install(install_dir, source=install_source)
 # Set default targets
 default_args = [library, copy]
 Default(*default_args)
+
+if env.get("target") == "test":
+    test_env = env.Clone()
+    
+    # Tell the compiler where to look for test headers
+    test_env.Append(CPPPATH=["src/", "tests/"])
+    
+    # List all files required to assemble the test binary
+    test_sources = [
+        "tests/catch_amalgamated.cpp", 
+        "tests/test_main.cpp",
+        "tests/test_assignment.cpp",
+        
+        "src/big_number.cpp"
+    ]
+    
+    test_binary = test_env.Program("bin/run_tests", test_sources)
+    
+    # Automation: Force SCons to immediately run the executable after a successful compile
+    test_env.AlwaysBuild(test_env.Command("run_suite", test_binary, action=test_binary[0].abspath))
