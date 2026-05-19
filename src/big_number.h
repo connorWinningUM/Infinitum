@@ -39,9 +39,9 @@ public:
     int get_round_type() const;
 
     void set_value(const godot::Variant &p_other);
-    void set_valuebig(const godot::Ref<BigNumber> &p_other);
-    void set_valuef(const double &p_value);
-    void set_valuesi(const int &p_value);
+    void set_value_big(const BigNumber &p_other);
+    void set_value_f(const double &p_value);
+    void set_value_si(const int &p_value);
 
     float to_float() const;
     std::string to_scientific() const;
@@ -67,6 +67,7 @@ public:
 private:
     mpfr_t big_num;
     BigRounding round_type;
+    mpfr_rnd_t round_type_mpfr;
 
     // function signature shapes MPFR uses for operations (used for the execute_math_op helper)
     typedef int (*mpfr_obj_func)(mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mpfr_rnd_t);
