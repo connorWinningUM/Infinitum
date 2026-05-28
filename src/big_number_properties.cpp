@@ -1,6 +1,15 @@
 #include "big_number.h"
 
 void BigNumber::set_precision(const int &precision) {
+    if (precision < MPFR_PREC_MIN || precision > MPFR_PREC_MAX) {
+        godot::UtilityFunctions::push_error(
+            "BigNumber: Precision ", precision, 
+            " is out of bounds! Must be between ", (int64_t)MPFR_PREC_MIN, 
+            " and ", (int64_t)MPFR_PREC_MAX
+        );
+        return;
+    }
+
     mpfr_prec_round(big_num, precision, static_cast<mpfr_rnd_t>(round_type));
 }
 

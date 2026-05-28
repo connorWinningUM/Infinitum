@@ -8,11 +8,12 @@
 #pragma once
 #include "godot_cpp/variant/variant.hpp"
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/resource.hpp>
 #include <string>
 #include <mpfr.h>
 
-class BigNumber: public godot::RefCounted {
-    GDCLASS(BigNumber, godot::RefCounted)
+class BigNumber: public godot::Resource {
+    GDCLASS(BigNumber, godot::Resource)
 
 protected:
     static void _bind_methods();
