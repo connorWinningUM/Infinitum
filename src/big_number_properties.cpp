@@ -2,7 +2,7 @@
 
 void BigNumber::set_precision(const int &precision) {
     if (precision < MPFR_PREC_MIN || precision > MPFR_PREC_MAX) {
-        godot::UtilityFunctions::push_error(
+        godot::UtilityFunctions::printerr(
             "BigNumber: Precision ", precision, 
             " is out of bounds! Must be between ", (int64_t)MPFR_PREC_MIN, 
             " and ", (int64_t)MPFR_PREC_MAX
