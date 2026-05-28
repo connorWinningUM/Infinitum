@@ -3,28 +3,34 @@ extends Node
 @export var bn: BigNumber
 
 func _ready() -> void:
-	Engine.print_error_messages = false # prevent the editor from printing errors
 	bn = BigNumber.new()
 	
 	print("====== Testing BigNumber Properties ======")
 	properties();
 
 func properties() -> void:
-	test_precision()
+	var precision_fails: int = test_precision()
+	if precision_fails == 0:
+		print("✅ ALL TESTS PASSED SUCCESSFULLY!")
+	else:
+		printerr("❌ %d BigNumber-Pricision tests failed, see previous logs" % precision_fails)
 
-func test_precision() -> void:
+# returns the number of test case failures
+func test_precision() -> int:
+	Engine.print_error_messages = false
 	var total_failures : int = 0
+	var prev = bn.precision
 	
 	total_failures += Testing.check_equal(256, bn.precision, "BigNumber precision is not initialized properly")
+	prev = bn.precision
 	bn.precision = 0
-	total_failures += Testing.check_equal(256, bn.precision, "BigNumber failed to reject precision 0")
+	total_failures += Testing.check_equal(prev, bn.precision, "BigNumber failed to reject precision 0")
+	prev = bn.precision
 	bn.precision = -64
-	total_failures += Testing.check_equal(256, bn.precision, "BigNumber failed to reject negative precision")
+	total_failures += Testing.check_equal(prev, bn.precision, "BigNumber failed to reject negative precision")
 	bn.precision = 99999999
 	total_failures += Testing.check_equal(99999999, bn.precision,
 		"BigNumber failed to scale up precision")
 	
-	if total_failures == 0:
-		print("✅ ALL TESTS PASSED SUCCESSFULLY!")
-	else:
-		printerr("❌ TESTING COMPLETE: %d assertion(s) failed. See logs above." % total_failures)
+	Engine.print_error_messages = true
+	return total_failures
