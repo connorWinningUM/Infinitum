@@ -113,10 +113,10 @@ void BigNumber::_bind_methods() {
     godot::ClassDB::bind_method(godot::D_METHOD("compare", "other"), &BigNumber::compare);
     godot::ClassDB::bind_method(godot::D_METHOD("_equal", "other"), &BigNumber::operator_is_equal);
     godot::ClassDB::bind_method(godot::D_METHOD("_not_equal", "other"), &BigNumber::operator_not_is_equal);
-    godot::ClassDB::bind_method(godot::D_METHOD("_less", "other"), &BigNumber::operator_less_than);
-    godot::ClassDB::bind_method(godot::D_METHOD("_less_equal", "other"), &BigNumber::operator_less_than_equal);
-    godot::ClassDB::bind_method(godot::D_METHOD("_greater", "other"), &BigNumber::operator_greater_than);
-    godot::ClassDB::bind_method(godot::D_METHOD("_greater_equal", "other"), &BigNumber::operator_greater_than_equal);
+    //godot::ClassDB::bind_method(godot::D_METHOD("_less", "other"), &BigNumber::operator_less_than);
+    //godot::ClassDB::bind_method(godot::D_METHOD("_less_equal", "other"), &BigNumber::operator_less_than_equal);
+    //godot::ClassDB::bind_method(godot::D_METHOD("_greater", "other"), &BigNumber::operator_greater_than);
+    //godot::ClassDB::bind_method(godot::D_METHOD("_greater_equal", "other"), &BigNumber::operator_greater_than_equal);
 
     godot::ClassDB::bind_method(godot::D_METHOD("_add", "other"), &BigNumber::operator_add);
     godot::ClassDB::bind_method(godot::D_METHOD("_sub", "other"), &BigNumber::operator_sub);
@@ -125,5 +125,5 @@ void BigNumber::_bind_methods() {
     godot::ClassDB::bind_method(godot::D_METHOD("_mod", "other"), &BigNumber::operator_mod);
     godot::ClassDB::bind_method(godot::D_METHOD("_pow", "other"), &BigNumber::operator_pow);
 
-    godot::ClassDB::bind_method(godot::D_METHOD("_neg"), &BigNumber::operator_neg);
+    //godot::ClassDB::bind_method(godot::D_METHOD("_neg"), &BigNumber::operator_neg);
 }

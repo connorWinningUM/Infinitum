@@ -7,7 +7,6 @@
 */
 #pragma once
 #include "godot_cpp/variant/variant.hpp"
-#include <cstdint>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <string>
 #include <mpfr.h>
@@ -52,7 +51,7 @@ public:
 
     bool operator_is_equal(const godot::Ref<BigNumber> &p_other) const;
     bool operator_not_is_equal(const godot::Ref<BigNumber> &p_other) const;
-    godot::Ref<BigNumber> operator_neg() const;
+    //godot::Ref<BigNumber> operator_neg() const;
 
     /*
     bool lt_big(const BigNumber &p_other) const;
@@ -93,9 +92,9 @@ public:
     // ============= Operator Wrappers ============== //
 public: 
     bool operator_less_than(const godot::Variant &p_other) const;
-    bool operator_less_than_equal(const godot::Variant &p_other) const;
-    bool operator_greater_than(const godot::Variant &p_other) const;
-    bool operator_greater_than_equal(const godot::Variant &p_other) const;
+    //bool operator_less_than_equal(const godot::Variant &p_other) const;
+    //bool operator_greater_than(const godot::Variant &p_other) const;
+    //bool operator_greater_than_equal(const godot::Variant &p_other) const;
 
     godot::Ref<BigNumber> operator_sub(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_add(const godot::Variant &p_other) const;

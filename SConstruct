@@ -91,6 +91,11 @@ bundle_id_prefix = env.get('bundle_id_prefix', 'com.gdextension')  # Ensure pref
 # Append include directories to CPPPATH
 env.Append(CPPPATH=include_dirs)
 
+# Add third party static libraries
+if env["platform"] == "linux":
+    env.Append(LIBPATH=["#thirdparty/linux"])
+    env.Append(LIBS=["mpfr", "gmp"])
+
 # Find all .cpp files recursively in the specified source directories
 sources = find_sources(source_dirs, source_exts)
 
