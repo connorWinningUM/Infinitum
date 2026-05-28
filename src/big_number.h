@@ -45,9 +45,6 @@ public:
     void set_value_f(const double &p_value);
     void set_value_si(const int &p_value);
 
-    float to_float() const;
-    std::string to_scientific() const;
-
 
     // ============= Operator Overloads ============= //
 public:    
@@ -107,6 +104,11 @@ public:
     godot::Ref<BigNumber> operator_pow(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_mod(const godot::Variant &p_other) const;
 
+
+    // ================= Conversions ================ //
+public:
+    float to_float() const;
+    std::string to_scientific() const;
 
     // ==================== Misc. =================== //
 public:
