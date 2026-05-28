@@ -6,6 +6,7 @@
 */
 #include "big_number.h"
 #include "mpfr_operations.h"
+#include "utils.h"
 
 #include "godot_cpp/core/object.hpp"
 #include "godot_cpp/core/property_info.hpp"
@@ -13,130 +14,9 @@
 #include <godot_cpp/core/class_db.hpp>
 
 using namespace godot;
+using utils::is_BigNumber;
 
-// ================== Helper Functions ================== //
-bool is_BigNumber(const godot::Variant &p_other) {
-    godot::Object *raw_obj = p_other;
-
-    if (raw_obj != nullptr && raw_obj->get_class() == "BigNumber")
-        return true;
-
-    return false;
-}
-
-godot::Ref<BigNumber> BigNumber::execute_math_op( const godot::Variant &p_other, mpfr_obj_func op_obj, mpfr_si_func op_si, mpfr_d_func op_d ) const {
-    godot::Ref<BigNumber> result;
-    result.instantiate();
-    mpfr_set_prec(result->big_num, mpfr_get_prec(this->big_num));
-
-    mpfr_rnd_t mpfr_rounding = static_cast<mpfr_rnd_t>(this->round_type);
-    Variant::Type other_type = p_other.get_type();
-
-    if (other_type == godot::Variant::OBJECT) {
-        godot::Object *raw_obj = p_other;
-
-        if (is_BigNumber(p_other)) {
-            BigNumber *other_num = godot::Object::cast_to<BigNumber>(raw_obj);
-            op_obj(result->big_num, this->big_num, other_num->big_num, mpfr_rounding);
-
-        } else {
-            String missing_class = raw_obj->get_class();
-            ERR_PRINT("Expected BigNumber, but received class type: " + missing_class);
-        }
-    }
-
-    else if(other_type == godot::Variant::INT) {
-        long val = p_other;
-        op_si(result->big_num, this->big_num, val, mpfr_rounding);
-    }
-
-    else if(other_type == godot::Variant::FLOAT) {
-        double val = p_other;
-        op_d(result->big_num, this->big_num, val, mpfr_rounding);
-    }
-
-    else {
-        ERR_PRINT("BigNumber::execute_math_op - Unsupported Variant type!, supported types: float, int, BigNumber");
-        mpfr_set(result->big_num, this->big_num, mpfr_rounding);
-    }
-
-    return result;
-    
-}
-
-// ============== Constructor / Destructor ============== //
-BigNumber::BigNumber() {
-    round_type_mpfr = MPFR_RNDN;
-    round_type = static_cast<BigRounding>(MPFR_RNDN);
-    mpfr_init2(big_num, 256);
-}
-
-BigNumber::BigNumber(const BigNumber &other) {
-    set_value_big(other);
-}
-
-BigNumber::~BigNumber() {
-    mpfr_clear(big_num);
-}
-
-// =================== Member Methods =================== //
-void BigNumber::set_precision(const int &precision) {
-    mpfr_prec_round(big_num, precision, static_cast<mpfr_rnd_t>(round_type));
-}
-
-int BigNumber::get_precision() const {
-    return mpfr_get_prec(big_num);
-}
-
-void BigNumber::set_round_type(const int &value) {
-    this->round_type = static_cast<BigRounding>(value);
-    this->round_type_mpfr = static_cast<mpfr_rnd_t>(value);
-}
-
-int BigNumber::get_round_type() const {
-    return static_cast<int>(round_type);
-}
-
-void BigNumber::set_value_big(const BigNumber &p_other) {
-    if (this == &p_other) {
-        return;
-    }
-
-    this->round_type = p_other.round_type;
-    this->round_type_mpfr = static_cast<mpfr_rnd_t>(round_type);
-
-    mpfr_prec_round(this->big_num, p_other.get_precision(), this->round_type_mpfr);
-    mpfr_set(this->big_num, p_other.big_num, this->round_type_mpfr);
-
-}
-
-void BigNumber::set_value_f(const double &p_value) {
-    mpfr_set_d(this->big_num, p_value, this->round_type_mpfr);
-}
-
-void BigNumber::set_value_si(const int &p_value) {
-    mpfr_set_si(this->big_num, p_value, this->round_type_mpfr);
-}
-
-void BigNumber::set_value(const godot::Variant &p_other) {
-    Variant::Type other_type = p_other.get_type();
-
-    if(is_BigNumber(p_other)){
-        BigNumber *other_obj = godot::Object::cast_to<BigNumber>(p_other);
-        
-        if (other_obj != nullptr) {
-            set_value_big(*other_obj);
-        }
-    } else if(other_type == godot::Variant::FLOAT) {
-        set_value_f(p_other);
-
-    } else if(other_type == godot::Variant::INT) {
-        set_value_si(p_other);
-
-    } else {
-        ERR_PRINT("BigNumber::set_value - Unsupported Variant type!, supported types: float, int, BigNumber");
-    }
-}
+// ============= Operator Overloads ============= //
 
 int BigNumber::compare(const godot::Ref<BigNumber> &p_other) const {
     if (p_other.is_null()) {
@@ -151,6 +31,44 @@ bool BigNumber::operator_is_equal(const godot::Ref<BigNumber> &p_other) const {
     }
     return mpfr_cmp(this->big_num, p_other->big_num) == 0;
 }
+
+bool BigNumber::operator_not_is_equal(const godot::Ref<BigNumber> &p_other) const {
+    return !operator_is_equal(p_other);
+}
+
+// ============= Operator Wrappers ============== //
+
+bool BigNumber::operator_less_than(const godot::Variant &p_other) const {
+    Variant::Type other_type = p_other.get_type();
+    godot::Object *raw_obj = p_other;
+
+    if(other_type == godot::Variant::OBJECT) {
+        if(is_BigNumber(other_type)){
+            BigNumber *other_num = godot::Object::cast_to<BigNumber>(raw_obj);
+            return mpfr_less_p(this->big_num, other_num->big_num);
+
+        } else {
+            String missing_class = raw_obj->get_class();
+            ERR_PRINT("Expected BigNumber, but received class type: " + missing_class);
+        }
+
+    } else if(other_type == godot::Variant::INT) {
+        
+
+    } else if(other_type == godot::Variant::FLOAT) {
+
+
+    } else {
+        ERR_PRINT("BigNumber::execute_comparison - Unsupported Variant type!, supported types: float, int, BigNumber");
+    }
+    return false;
+}
+
+//bool BigNumber::operator_less_than_equal(const godot::Variant &p_other) const {}
+
+//bool BigNumber::operator_greater_than(const godot::Variant &p_other) const {}
+
+//bool BigNumber::operator_greater_than_equal(const godot::Variant &p_other) const {}
 
 godot::Ref<BigNumber> BigNumber::operator_sub(const godot::Variant &p_other) const {
     return execute_math_op(p_other, mpfr_sub, mpfr_sub_si, mpfr_sub_d);
@@ -167,9 +85,16 @@ godot::Ref<BigNumber> BigNumber::operator_div(const godot::Variant &p_other) con
 godot::Ref<BigNumber> BigNumber::operator_mod(const godot::Variant &p_other) const {
     return execute_math_op(p_other, mpfr_fmod, mpfr_fmod_si, mpfr_fmod_d);
 }
-
 godot::Ref<BigNumber> BigNumber::operator_pow(const godot::Variant &p_other) const {
     return execute_math_op(p_other, mpfr_pow, mpfr_pow_si, mpfr_pow_d);
+}
+
+//godot::Ref<BigNumber> BigNumber::operator_neg() const {}
+
+// returns positive value if the big_num is positive
+// returns negative value otherwise
+int BigNumber::sign() const {
+    return mpfr_sgn(big_num);
 }
 
 // ========== Bind Member Methods / Properties ========== //
@@ -184,7 +109,6 @@ void BigNumber::_bind_methods() {
     godot::ClassDB::bind_method(godot::D_METHOD("set_value_big", "other"), &BigNumber::set_value_big);
     godot::ClassDB::bind_method(godot::D_METHOD("set_value_float", "value"), &BigNumber::set_value_f);
     godot::ClassDB::bind_method(godot::D_METHOD("set_value_int", "value"), &BigNumber::set_value_si);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_value", "value"), &BigNumber::set_value);
 
     godot::ClassDB::bind_method(godot::D_METHOD("compare", "other"), &BigNumber::compare);
     godot::ClassDB::bind_method(godot::D_METHOD("_equal", "other"), &BigNumber::operator_is_equal);

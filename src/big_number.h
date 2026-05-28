@@ -7,6 +7,7 @@
 */
 #pragma once
 #include "godot_cpp/variant/variant.hpp"
+#include <cstdint>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <string>
 #include <mpfr.h>
@@ -32,37 +33,85 @@ public:
     ~BigNumber();
     BigNumber(const BigNumber &other);
 
+    // ================= Properties ================= //
+public:
     void set_precision(const int &precision);
     int get_precision() const;
 
     void set_round_type(const int &value);
     int get_round_type() const;
 
-    void set_value(const godot::Variant &p_other);
-    void set_value_big(const BigNumber &p_other);
+    void set_value_big(const godot::Ref<BigNumber> &p_other);
     void set_value_f(const double &p_value);
     void set_value_si(const int &p_value);
 
     float to_float() const;
     std::string to_scientific() const;
 
+
     // ============= Operator Overloads ============= //
+public:    
+    int compare(const godot::Ref<BigNumber> &p_other) const;
+
+    bool operator_is_equal(const godot::Ref<BigNumber> &p_other) const;
+    bool operator_not_is_equal(const godot::Ref<BigNumber> &p_other) const;
+    godot::Ref<BigNumber> operator_neg() const;
+
+    /*
+    bool lt_big(const BigNumber &p_other) const;
+    bool lt_int(const int64_t &p_other) const;
+    bool lt_f(const double &p_other) const;
+    bool lte_big(const BigNumber &p_other) const;
+    bool lte_int(const int64_t &p_other) const;
+    bool lte_f(const double &p_other) const;
+    bool gt_big(const BigNumber &p_other) const;
+    bool gt_int(const int64_t &p_other) const;
+    bool gt_f(const double &p_other) const;
+    bool gte_big(const BigNumber &p_other) const;
+    bool gte_int(const int64_t &p_other) const;
+    bool gte_f(const double &p_other) const;
+
+    godot::Ref<BigNumber> sub_big(const BigNumber &p_other) const;
+    godot::Ref<BigNumber> sub_int(const int64_t &p_other) const;
+    godot::Ref<BigNumber> sub_f(const double &p_other) const;
+    godot::Ref<BigNumber> add_big(const BigNumber &p_other) const;
+    godot::Ref<BigNumber> add_int(const int64_t &p_other) const;
+    godot::Ref<BigNumber> add_f(const double &p_other) const;
+    godot::Ref<BigNumber> mul_big(const BigNumber &p_other) const;
+    godot::Ref<BigNumber> mul_int(const int64_t &p_other) const;
+    godot::Ref<BigNumber> mul_f(const double &p_other) const;
+    godot::Ref<BigNumber> div_big(const BigNumber &p_other) const;
+    godot::Ref<BigNumber> div_int(const int64_t &p_other) const;
+    godot::Ref<BigNumber> div_f(const double &p_other) const;
+    godot::Ref<BigNumber> pow_big(const BigNumber &p_other) const;
+    godot::Ref<BigNumber> pow_int(const int64_t &p_other) const;
+    godot::Ref<BigNumber> pow_f(const double &p_other) const;
+    godot::Ref<BigNumber> mod_big(const BigNumber &p_other) const;
+    godot::Ref<BigNumber> mod_int(const int64_t &p_other) const;
+    godot::Ref<BigNumber> mod_f(const double &p_other) const;
+    */
+
+    // Godot doesnt allow operator overloading, so we must
+    // create wrappers to call the operator methods
+    // ============= Operator Wrappers ============== //
+public: 
+    bool operator_less_than(const godot::Variant &p_other) const;
+    bool operator_less_than_equal(const godot::Variant &p_other) const;
+    bool operator_greater_than(const godot::Variant &p_other) const;
+    bool operator_greater_than_equal(const godot::Variant &p_other) const;
+
     godot::Ref<BigNumber> operator_sub(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_add(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_mul(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_div(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_pow(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_mod(const godot::Variant &p_other) const;
-    
-    int compare(const godot::Ref<BigNumber> &p_other) const;
-    bool operator_is_equal(const godot::Ref<BigNumber> &p_other) const;
-    bool operator_not_is_equal(const godot::Ref<BigNumber> &p_other) const;
-    bool operator_less_than(const godot::Variant &p_other) const;
-    bool operator_less_than_equal(const godot::Variant &p_other) const;
-    bool operator_greater_than(const godot::Variant &p_other) const;
-    bool operator_greater_than_equal(const godot::Variant &p_other) const;
 
-    godot::Ref<BigNumber> operator_neg() const;
+
+    // ==================== Misc. =================== //
+public:
+    int sign() const;
+
 
 private:
     mpfr_t big_num;

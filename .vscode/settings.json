@@ -1,6 +1,6 @@
 {
   "explorer.autoReveal": false,
-  "files.exclud": {
+  "files.exclude": {
     ".zed":true,
     "*.pdb":true,
     "src/**/*.o": true,
