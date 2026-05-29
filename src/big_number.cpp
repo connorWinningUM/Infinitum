@@ -25,8 +25,7 @@ void BigNumber::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_precision"), &BigNumber::get_precision);
     ADD_PROPERTY(PropertyInfo(Variant::INT, "precision"), "set_precision", "get_precision");
 
-    // add property rounding_type
-    //ClassDB::bind_method(D_METHOD("set_rounding", "value"), &BigNumber::set_precision);
+    _bind_rounding();
 
     godot::ClassDB::bind_method(godot::D_METHOD("set_value_big", "other"), &BigNumber::set_value_big);
     godot::ClassDB::bind_method(godot::D_METHOD("set_value_float", "value"), &BigNumber::set_value_f);
@@ -48,4 +47,18 @@ void BigNumber::_bind_methods() {
     godot::ClassDB::bind_method(godot::D_METHOD("_pow", "other"), &BigNumber::operator_pow);
 
     //godot::ClassDB::bind_method(godot::D_METHOD("_neg"), &BigNumber::operator_neg);
+}
+
+void BigNumber::_bind_rounding() {
+    ClassDB::bind_method(D_METHOD("set_rounding", "value"), &BigNumber::set_round_type);
+    ClassDB::bind_method(D_METHOD("get_rounding"), &BigNumber::get_round_type);
+    ADD_PROPERTY(
+        PropertyInfo(
+            Variant::STRING,                             
+            "rounding",                                  
+            PROPERTY_HINT_ENUM,                          
+            "Nearest,Toward Zero,Up,Down,Away From Zero"
+        ),
+        "set_rounding",
+        "get_rounding");
 }

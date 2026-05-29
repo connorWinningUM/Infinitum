@@ -6,6 +6,7 @@
 *   By default, rounds down; precision = 256b; 
 */
 #pragma once
+#include "godot_cpp/variant/string.hpp"
 #include "godot_cpp/variant/variant.hpp"
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/resource.hpp>
@@ -16,18 +17,9 @@ class BigNumber: public godot::Resource {
 
 protected:
     static void _bind_methods();
+    static void _bind_rounding();
 
 public:
-    // Alias the mpfr rounding type enum so that it can be properly exported
-    // all values are aliased so we can assume they have the same value and can be used as such
-    enum BigRounding {
-        ROUND_NEAREST = MPFR_RNDN,
-        ROUND_ZERO = MPFR_RNDZ,
-        ROUND_UP = MPFR_RNDU,
-        ROUND_DOWN = MPFR_RNDD,
-        ROUND_AWAY = MPFR_RNDA
-    };
-
     BigNumber();
     ~BigNumber();
     BigNumber(const BigNumber &other);
@@ -37,8 +29,8 @@ public:
     void set_precision(const int &precision);
     int get_precision() const;
 
-    void set_round_type(const int &value);
-    int get_round_type() const;
+    void set_round_type(const godot::String &value);
+    godot::String get_round_type() const;
 
     void set_value_big(const godot::Ref<BigNumber> &p_other);
     void set_value_f(const double &p_value);
@@ -118,8 +110,8 @@ public:
 
 private:
     mpfr_t big_num;
-    BigRounding round_type;
     mpfr_rnd_t round_type_mpfr;
+    godot::String round_type_string;
 
     // function signature shapes MPFR uses for operations (used for the execute_math_op helper)
     typedef int (*mpfr_obj_func)(mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mpfr_rnd_t);
@@ -135,4 +127,3 @@ private:
     ) const;
 
 };
-

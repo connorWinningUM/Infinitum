@@ -2,13 +2,12 @@
 
 BigNumber::BigNumber() {
     round_type_mpfr = MPFR_RNDN;
-    round_type = static_cast<BigRounding>(MPFR_RNDN);
+    round_type_string = "Nearest";
     mpfr_init2(big_num, 256);
 }
 
 BigNumber::BigNumber(const BigNumber &other) {
-    this->round_type = other.round_type;
-    this->round_type_mpfr = static_cast<mpfr_rnd_t>(this->round_type);
+    this->round_type_mpfr = other.round_type_mpfr;
 
     mpfr_init2(this->big_num, other.get_precision());
 
