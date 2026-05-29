@@ -19,6 +19,7 @@ protected:
     static void _bind_methods();
     static void _bind_rounding();
     static void _bind_precision();
+    static void _bind_set_value();
 
 public:
     BigNumber();
