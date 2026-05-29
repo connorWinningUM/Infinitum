@@ -21,10 +21,7 @@ int BigNumber::sign() const {
 }
 
 void BigNumber::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("set_precision", "value"), &BigNumber::set_precision);
-    ClassDB::bind_method(D_METHOD("get_precision"), &BigNumber::get_precision);
-    ADD_PROPERTY(PropertyInfo(Variant::INT, "precision"), "set_precision", "get_precision");
-
+    _bind_precision();
     _bind_rounding();
 
     godot::ClassDB::bind_method(godot::D_METHOD("set_value_big", "other"), &BigNumber::set_value_big);
@@ -61,4 +58,10 @@ void BigNumber::_bind_rounding() {
         ),
         "set_rounding",
         "get_rounding");
+}
+
+void BigNumber::_bind_precision() {
+    ClassDB::bind_method(D_METHOD("set_precision", "value"), &BigNumber::set_precision);
+    ClassDB::bind_method(D_METHOD("get_precision"), &BigNumber::get_precision);
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "precision"), "set_precision", "get_precision");
 }

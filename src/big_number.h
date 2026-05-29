@@ -18,6 +18,7 @@ class BigNumber: public godot::Resource {
 protected:
     static void _bind_methods();
     static void _bind_rounding();
+    static void _bind_precision();
 
 public:
     BigNumber();
