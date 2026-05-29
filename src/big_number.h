@@ -9,7 +9,6 @@
 #include "godot_cpp/variant/variant.hpp"
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/resource.hpp>
-#include <string>
 #include <mpfr.h>
 
 class BigNumber: public godot::Resource {
@@ -107,8 +106,10 @@ public:
 
     // ================= Conversions ================ //
 public:
-    float to_float() const;
-    std::string to_scientific() const;
+    //long int get_as_int();
+    //double get_as_float();
+    //godot::String get_as_sci();
+    
 
     // ==================== Misc. =================== //
 public:

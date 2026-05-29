@@ -4,11 +4,11 @@ extends Node
 
 func _ready() -> void:
 	bn = BigNumber.new()
-	
 	print("====== Testing BigNumber Properties ======")
-	properties();
+	test_properties();
+	print("====== Testing BigNumber Set Value =======")
 
-func properties() -> void:
+func test_properties() -> void:
 	var precision_fails: int = test_precision()
 	if precision_fails == 0:
 		print("✅ ALL TESTS PASSED SUCCESSFULLY!")
@@ -34,3 +34,10 @@ func test_precision() -> int:
 	
 	Engine.print_error_messages = true
 	return total_failures
+
+# Assumes that the get_int 
+func test_set_value() -> int:
+	Engine.print_error_messages = false
+	var total_failures: int = 0
+	Engine.print_error_messages = true
+	return 0
