@@ -55,10 +55,12 @@ void BigNumber::_bind_set_value() {
     godot::ClassDB::bind_method(godot::D_METHOD("set_big", "other"), &BigNumber::set_value_big);
     godot::ClassDB::bind_method(godot::D_METHOD("set_float", "value"), &BigNumber::set_value_f);
     godot::ClassDB::bind_method(godot::D_METHOD("set_int", "value"), &BigNumber::set_value_si);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_str", "string value", "base"), &BigNumber::set_value_str, 10);
 }
 
 void BigNumber::_bind_get_value() {
     godot::ClassDB::bind_method(godot::D_METHOD("get_int"), &BigNumber::get_as_int);
+    godot::ClassDB::bind_method(godot::D_METHOD("get_float"), &BigNumber::get_as_float);
 }
 
 void BigNumber::_bind_comparisons() {

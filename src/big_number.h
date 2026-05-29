@@ -40,6 +40,7 @@ public:
     void set_value_big(const godot::Ref<BigNumber> &p_other);
     void set_value_f(const double &p_value);
     void set_value_si(const long &p_value);
+    void set_value_str(const godot::String &p_str, const int &p_base = 10);
 
 
     // ============= Operator Overloads ============= //
@@ -49,26 +50,6 @@ public:
     bool operator_is_equal(const godot::Ref<BigNumber> &p_other) const;
     bool operator_not_is_equal(const godot::Ref<BigNumber> &p_other) const;
 
-    
-    //bool lt_big(godot::Ref<BigNumber> &p_other) const;
-    //bool lt_int(const int64_t &p_other) const;
-    //bool lt_f(const double &p_other) const;
-    //bool lte_big(godot::Ref<BigNumber> &p_other) const;
-    //bool lte_int(const int64_t &p_other) const;
-    //bool lte_f(const double &p_other) const;
-    //bool gt_big(godot::Ref<BigNumber> &p_other) const;
-    //bool gt_int(const int64_t &p_other) const;
-    //bool gt_f(const double &p_other) const;
-    //bool gte_big(godot::Ref<BigNumber> &p_other) const;
-    //bool gte_int(const int64_t &p_other) const;
-    //bool gte_f(const double &p_other) const;
-    
-    //godot::Ref<BigNumber> operator_neg();
-
-    // Godot doesnt allow operator overloading, so we must
-    // create wrappers to call the operator methods
-    // ============= Operator Wrappers ============== //
-public: 
     bool operator_less_than(const godot::Variant &p_other) const;
     //bool operator_less_than_equal(const godot::Variant &p_other) const;
     //bool operator_greater_than(const godot::Variant &p_other) const;
@@ -81,12 +62,14 @@ public:
     godot::Ref<BigNumber> operator_pow(const godot::Variant &p_other) const;
     godot::Ref<BigNumber> operator_mod(const godot::Variant &p_other) const;
 
+    //godot::Ref<BigNumber> operator_neg();
 
     // ================= Conversions ================ //
 public:
     long get_as_int();
-    //double get_as_float();
+    double get_as_float();
     //godot::String get_as_sci();
+    godot::String get_as_str();
     
 
     // ==================== Misc. =================== //

@@ -17,7 +17,7 @@ bool BigNumber::operator_is_equal(const godot::Ref<BigNumber> &p_other) const {
     if (p_other.is_null()) {
         return false;
     }
-    return mpfr_cmp(this->big_num, p_other->big_num) == 0;
+    return compare(p_other) == 0;
 }
 
 bool BigNumber::operator_not_is_equal(const godot::Ref<BigNumber> &p_other) const {

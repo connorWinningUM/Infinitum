@@ -1,4 +1,5 @@
 #include "big_number.h"
+#include <string>
 
 void BigNumber::set_value_big(const godot::Ref<BigNumber> &p_other) {
     if (p_other.is_null())
@@ -21,6 +22,15 @@ void BigNumber::set_value_si(const long &p_value) {
     mpfr_set_si(this->big_num, p_value, this->round_type_mpfr);
 }
 
+void BigNumber::set_value_str(const godot::String &p_str, const int &p_base) {
+    std::string c_str = p_str.utf8().get_data();
+    mpfr_set_str(big_num, c_str.c_str(), p_base, round_type_mpfr);
+}
+
 long BigNumber::get_as_int() {
     return mpfr_get_si(big_num, round_type_mpfr);
+}
+
+double BigNumber::get_as_float() {
+    return mpfr_get_d(big_num, round_type_mpfr);
 }

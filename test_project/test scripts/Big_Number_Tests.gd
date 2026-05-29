@@ -71,7 +71,17 @@ func test_value() -> int:
 	for i in range(100):
 		var num: float = randf()
 		bn.set_float(num)
-		#total_failures += Testing.check_equal(num, bn.get_)
+		total_failures += Testing.check_equal(num, bn.get_float(), "BigNumber Float value not set correctly")
+	
+	for i in range(100):
+		var num: int = randi()
+		bn.set_str(str(num))
+		total_failures += Testing.check_equal(num, bn.get_int(), "BigNumber set_string not working for ints")
+	
+	for i in range(100):
+		var num: float = randf()
+		bn.set_str(str(num))
+		total_failures += Testing.check_equal_float(num, bn.get_float(), "BigNumber set_string not working for floats")
 	
 	Engine.print_error_messages = true
 	if total_failures == 0:
