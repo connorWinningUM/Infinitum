@@ -24,6 +24,7 @@ void BigNumber::_bind_methods() {
     _bind_precision();
     _bind_rounding();
     _bind_set_value();
+    _bind_get_value();
     _bind_comparisons();
     _bind_operators();
 
@@ -51,9 +52,13 @@ void BigNumber::_bind_precision() {
 }
 
 void BigNumber::_bind_set_value() {
-    godot::ClassDB::bind_method(godot::D_METHOD("set_value_big", "other"), &BigNumber::set_value_big);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_value_float", "value"), &BigNumber::set_value_f);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_value_int", "value"), &BigNumber::set_value_si);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_big", "other"), &BigNumber::set_value_big);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_float", "value"), &BigNumber::set_value_f);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_int", "value"), &BigNumber::set_value_si);
+}
+
+void BigNumber::_bind_get_value() {
+    godot::ClassDB::bind_method(godot::D_METHOD("get_int"), &BigNumber::get_as_int);
 }
 
 void BigNumber::_bind_comparisons() {

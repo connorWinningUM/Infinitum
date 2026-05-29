@@ -5,8 +5,9 @@ extends Node
 func _ready() -> void:
 	bn = BigNumber.new()
 	print("====== Testing BigNumber Properties ======")
-	test_properties();
+	test_properties()
 	print("====== Testing BigNumber Set Value =======")
+	test_value()
 
 func test_properties() -> void:
 	var total_fails: int = test_precision()
@@ -57,9 +58,34 @@ func test_rounding() -> int:
 	bn.rounding = originalRound
 	return total_failures
 
-# Assumes that the get_int 
-func test_set_value() -> int:
+func test_value() -> int:
+	bn.precision = 512
 	Engine.print_error_messages = false
 	var total_failures: int = 0
+	
+	for i in range(100):
+		var num: int = randi()
+		bn.set_int(num)
+		total_failures += Testing.check_equal(num, bn.get_int(), "BigNumber Int value not set correctly")
+	
+	for i in range(100):
+		var num: float = randf()
+		bn.set_float(num)
+		#total_failures += Testing.check_equal(num, bn.get_)
+	
+	Engine.print_error_messages = true
+	if total_failures == 0:
+		print("✅ ALL VALUE TESTS PASSED SUCCESSFULLY!")
+	else:
+		printerr("❌ %d BigNumber-Value tests failed, see previous logs" % total_failures)
+	
+	return total_failures
+
+func test_arithmatic() -> int:
+	Engine.print_error_messages = false
+	var total_failures: int = 0
+	
+	var other: BigNumber = BigNumber.new()
+	
 	Engine.print_error_messages = true
 	return total_failures
