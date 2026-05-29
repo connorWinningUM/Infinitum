@@ -21,6 +21,7 @@ protected:
     static void _bind_precision();
     static void _bind_set_value();
     static void _bind_comparisons();
+    static void _bind_operators();
 
 public:
     BigNumber();
