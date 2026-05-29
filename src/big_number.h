@@ -20,6 +20,7 @@ protected:
     static void _bind_rounding();
     static void _bind_precision();
     static void _bind_set_value();
+    static void _bind_comparisons();
 
 public:
     BigNumber();
