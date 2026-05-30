@@ -14,12 +14,6 @@
 
 using namespace godot;
 
-// returns positive value if the big_num is positive
-// returns negative value otherwise
-int BigNumber::sign() const {
-    return mpfr_sgn(big_num);
-}
-
 void BigNumber::_bind_methods() {
     _bind_precision();
     _bind_rounding();
@@ -27,8 +21,7 @@ void BigNumber::_bind_methods() {
     _bind_get_value();
     _bind_comparisons();
     _bind_operators();
-
-    //godot::ClassDB::bind_method(godot::D_METHOD("_neg"), &BigNumber::operator_neg);
+    _bind_misc();
 }
 
 void BigNumber::_bind_rounding() {
@@ -52,15 +45,16 @@ void BigNumber::_bind_precision() {
 }
 
 void BigNumber::_bind_set_value() {
-    godot::ClassDB::bind_method(godot::D_METHOD("set_big", "other"), &BigNumber::set_value_big);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_float", "value"), &BigNumber::set_value_f);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_int", "value"), &BigNumber::set_value_si);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_str", "string value", "base"), &BigNumber::set_value_str, 10);
+    godot::ClassDB::bind_method(godot::D_METHOD("from_big", "other"), &BigNumber::set_value_big);
+    godot::ClassDB::bind_method(godot::D_METHOD("from_float", "value"), &BigNumber::set_value_f);
+    godot::ClassDB::bind_method(godot::D_METHOD("from_int", "value"), &BigNumber::set_value_si);
+    godot::ClassDB::bind_method(godot::D_METHOD("from_str", "string value", "base"), &BigNumber::set_value_str, 10);
 }
 
 void BigNumber::_bind_get_value() {
-    godot::ClassDB::bind_method(godot::D_METHOD("get_int"), &BigNumber::get_as_int);
-    godot::ClassDB::bind_method(godot::D_METHOD("get_float"), &BigNumber::get_as_float);
+    godot::ClassDB::bind_method(godot::D_METHOD("to_int"), &BigNumber::get_as_int);
+    godot::ClassDB::bind_method(godot::D_METHOD("to_float"), &BigNumber::get_as_float);
+    godot::ClassDB::bind_method(godot::D_METHOD("to_str", "sig_digits", "base"), &BigNumber::get_as_str, 10);
 }
 
 void BigNumber::_bind_comparisons() {
@@ -80,4 +74,11 @@ void BigNumber::_bind_operators() {
     godot::ClassDB::bind_method(godot::D_METHOD("_div", "other"), &BigNumber::operator_div);
     godot::ClassDB::bind_method(godot::D_METHOD("_mod", "other"), &BigNumber::operator_mod);
     godot::ClassDB::bind_method(godot::D_METHOD("_pow", "other"), &BigNumber::operator_pow);
+}
+
+void BigNumber::_bind_misc() {
+    godot::ClassDB::bind_method(godot::D_METHOD("fits_int", "other"), &BigNumber::fits_si);
+    ClassDB::bind_method(D_METHOD("set_scale_names", "names"), &BigNumber::set_scale_names);
+    ClassDB::bind_method(D_METHOD("get_scale_names"), &BigNumber::get_scale_names);
+    ADD_PROPERTY(PropertyInfo(Variant::PACKED_STRING_ARRAY, "scale_names"), "set_scale_names", "get_scale_names");
 }

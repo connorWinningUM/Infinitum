@@ -3,7 +3,7 @@
 *   This header holds the main class of the Infinitum Library, BigNumber
 *
 *   Acts like a wrapper for the mpfr library
-*   By default, rounds down; precision = 256b; 
+*   By default, rounds down; precision = 256b;
 */
 #pragma once
 #include "godot_cpp/variant/string.hpp"
@@ -23,6 +23,7 @@ protected:
     static void _bind_get_value();
     static void _bind_comparisons();
     static void _bind_operators();
+    static void _bind_misc();
 
 public:
     BigNumber();
@@ -36,11 +37,6 @@ public:
 
     void set_round_type(const godot::String &value);
     godot::String get_round_type() const;
-
-    void set_value_big(const godot::Ref<BigNumber> &p_other);
-    void set_value_f(const double &p_value);
-    void set_value_si(const long &p_value);
-    void set_value_str(const godot::String &p_str, const int &p_base = 10);
 
 
     // ============= Operator Overloads ============= //
@@ -66,21 +62,38 @@ public:
 
     // ================= Conversions ================ //
 public:
+    void set_scale_names(const godot::PackedStringArray &p_scales);
+    godot::PackedStringArray get_scale_names() const;
+
+    void set_value_big(const godot::Ref<BigNumber> &p_other);
+    void set_value_f(const double &p_value);
+    void set_value_si(const long &p_value);
+    void set_value_str(const godot::String &p_str, const int &p_base = 10);
+
     long get_as_int();
     double get_as_float();
-    //godot::String get_as_sci();
-    godot::String get_as_str();
+    godot::String get_as_str(int p_sig_digits, int p_base = 10) const;
+    godot::String get_as_sci() const;
+
+    godot::String get_as_illion() const;
+    godot::String get_as_short_metric() const;
+    godot::String get_as_named_metric() const;
+    godot::String get_as_aa() const;
+    godot::String get_as_custom() const;
+
     
 
     // ==================== Misc. =================== //
 public:
     int sign() const;
+    bool fits_si() const;
 
 
 private:
     mpfr_t big_num;
     mpfr_rnd_t round_type_mpfr;
     godot::String round_type_string;
+    godot::PackedStringArray scale_names;
 
     // function signature shapes MPFR uses for operations (used for the execute_math_op helper)
     typedef int (*mpfr_obj_func)(mpfr_ptr, mpfr_srcptr, mpfr_srcptr, mpfr_rnd_t);

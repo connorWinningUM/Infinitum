@@ -4,6 +4,11 @@ BigNumber::BigNumber() {
     round_type_mpfr = MPFR_RNDN;
     round_type_string = "Nearest";
     mpfr_init2(big_num, 256);
+    scale_names = {
+        "", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion",
+        "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion",
+        "quattuordecillion", "quindecillion", "sexdecillion", "septendecillion", "octodecillion", "novemdecillion"
+    };
 }
 
 BigNumber::BigNumber(const BigNumber &other) {
